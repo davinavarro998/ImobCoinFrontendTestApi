@@ -53,6 +53,9 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    input[type="submit"]:hover {
+      background-color: #718bf5;
+    }
 
     #result {
       margin-top: 20px;
@@ -96,7 +99,7 @@
     
         <input type="submit" value="Submit">
     </form>
-    
+    <p id="loadingMsg" style="display: none;text-align: center;">Loading Request...</p>
     <div id="result" style="display: none;">
         <h2>Minted NFT Details:</h2>
         <p id="successMessage"></p>
@@ -110,6 +113,7 @@
     <script>
         document.getElementById('mintForm').addEventListener('submit', async function (event) {
             event.preventDefault();
+            document.getElementById("loadingMsg").style.display = "block"
             const formData = {
                 to: document.getElementById('to').value,
                 metadata: {
@@ -142,11 +146,16 @@
                     document.getElementById('transactionHash').textContent = `Transaction Hash: ${data.transactionHash}`;
                     document.getElementById('transactionLink').innerHTML = `<a target="_blank" href="https://testnet.ftmscan.com/tx/${data.transactionHash}">Follow your transaction HERE!</a>`;
                     document.getElementById('result').style.display = 'block';
+                    document.getElementById("loadingMsg").style.display = "none"
                 } else {
                     console.error('Error:', data.message);
+                    document.getElementById("loadingMsg").style.display = "none"
+                    alert("Error: ",data.message)
                 }
             } catch (error) {
+              document.getElementById("loadingMsg").style.display = "none"
                 console.error('Error:', error);
+                alert("Error",error)
             }
         });
     </script>
