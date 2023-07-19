@@ -75,13 +75,13 @@
     </style>
 </head>
 <body>
-    <h1>POST Request Form</h1>
+    <h1>Mint your Imob</h1>
     <form id="mintForm">
         <label for="authorization">Authorization Token:</label>
         <input type="password" id="authorization" name="authorization" placeholder="Enter your authorization token"
             required><br>
     
-        <label for="to">To:</label>
+        <label for="to"> Mint Token To:</label>
         <input type="text" id="to" name="to" value="0x8d082a5A58a518B72552261Cd1812076dF2102e4"><br>
     
         <label for="name">Name:</label>
@@ -104,6 +104,7 @@
         <p id="mintedTokenId"></p>
         <p id="brickERC20Address"></p>
         <p id="transactionHash"></p>
+        <p id="transactionLink"></p>
     </div>
     
     <script>
@@ -139,6 +140,7 @@
                     document.getElementById('mintedTokenId').textContent = `Minted Token ID: ${data.mintedTokenId}`;
                     document.getElementById('brickERC20Address').textContent = `Brick ERC20 Address: ${data.brickERC20Address}`;
                     document.getElementById('transactionHash').textContent = `Transaction Hash: ${data.transactionHash}`;
+                    document.getElementById('transactionLink').innerHTML = `<a target="_blank" href="https://testnet.ftmscan.com/tx/${data.transactionHash}">Follow your transaction HERE!</a>`;
                     document.getElementById('result').style.display = 'block';
                 } else {
                     console.error('Error:', data.message);
