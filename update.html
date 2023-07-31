@@ -1,203 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Imob NFT Metadata</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Update Imob NFT Metadata</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				line-height: 1.6;
+				margin: 0;
+				padding: 20px;
+			}
 
-        h1 {
-            margin-bottom: 20px;
-        }
+			h1 {
+				margin-bottom: 20px;
+			}
 
-        input[type='text'] {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 300px;
-            margin-right: 10px;
-        }
+			input[type='text'] {
+				padding: 10px;
+				font-size: 16px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				width: 300px;
+				margin-right: 10px;
+			}
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+			button {
+				padding: 10px 20px;
+				font-size: 16px;
+				background-color: #007bff;
+				color: #fff;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+			}
 
-        button:hover {
-            background-color: #0056b3;
-        }
+			button:hover {
+				background-color: #0056b3;
+			}
 
-        #loadingMessage {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #007bff;
-        }
+			#loadingMessage {
+				margin-top: 10px;
+				font-size: 16px;
+				color: #007bff;
+			}
 
-        #updateContainer {
-            margin-top: 30px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 20px;
-        }
+			#updateContainer {
+				margin-top: 30px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				padding: 20px;
+			}
 
-        #updateContainer h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
+			#updateContainer h2 {
+				font-size: 24px;
+				margin-bottom: 10px;
+			}
 
-        #updateContainer p {
-            margin: 5px 0;
-        }
+			#updateContainer p {
+				margin: 5px 0;
+			}
 
-        #updateContainer strong {
-            font-weight: bold;
-        }
+			#updateContainer strong {
+				font-weight: bold;
+			}
 
-        #updateContainer label {
-            display: block;
-            margin-top: 10px;
-        }
+			#updateContainer label {
+				display: block;
+				margin-top: 10px;
+			}
 
-        #updateContainer input[type='text'] {
-            width: 100%;
-            margin-top: 5px;
-        }
+			#updateContainer input[type='text'] {
+				width: 100%;
+				margin-top: 5px;
+			}
 
-        @media screen and (max-width: 480px) {
-            input[type='text'],
-            button {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div>
-        <a href="./index.html">Mint Imob Here!</a>
-        <a href="./view.html">View minted Imobs</a>
-    </div>
-    <h1>Update Metadata for Imob NFT</h1>
-    <input type="text" id="idInput" placeholder="Enter Token ID">
-    <button onclick="getImobData()">FETCH IMOB DATA</button>
-    <div id="loadingMessage" style="display: none;">Loading...</div>
+			@media screen and (max-width: 480px) {
+				input[type='text'],
+				button {
+					width: 100%;
+					margin-bottom: 10px;
+				}
+			}
+			.success-response {
+				background-color: #d4edda;
+				border: 1px solid #c3e6cb;
+				padding: 10px;
+				margin-top: 10px;
+			}
 
-    <div id="updateContainer" style="display: none;">
-        <h2>Update Metadata for Imob NFT</h2>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name">
+			.success-heading {
+				color: #155724;
+			}
 
-        <label for="image">Image URL:</label>
-        <input type="text" id="image" name="image">
+			/* Styles for error response */
+			.error-response {
+				background-color: #f8d7da;
+				border: 1px solid #f5c6cb;
+				padding: 10px;
+				margin-top: 10px;
+			}
 
-        <label for="vgv">VGV:</label>
-        <input type="text" id="vgv" name="vgv">
+			.error-heading {
+				color: #721c24;
+			}
+		</style>
+	</head>
+	<body>
+		<nav>
+			<ul>
+				<li>
+					<a href="./index.html">Mint a Imob</a>
+				</li>
+				<li>
+					<a href="./view.html">View a Imob</a>
+				</li>
+			</ul>
+		</nav>
 
-        <!-- Add more fields for other metadata properties as needed -->
+		<h1>Update Metadata for Imob NFT</h1>
+		<input type="text" id="idInput" placeholder="Enter Token ID" />
+		<button onclick="getImobData()">FETCH IMOB DATA</button>
 
-        <button onclick="updateImobData()">UPDATE METADATA</button>
-    </div>
+		<div id="updateContainer" style="display: none">
+			<h2>Update Metadata for Imob NFT</h2>
+			<label for="name">Name:</label>
+			<input type="text" id="name" name="name" />
 
-    <script>
-        let currentImobData = null;
+			<label for="image">Image URL:</label>
+			<input type="text" id="image" name="image" />
 
-        function getImobData() {
-            const idInput = document.getElementById('idInput').value;
+			<label for="vgv">ata:</label>
+			<input type="text" id="ata" name="ata" />
 
-            if (!idInput) {
-                alert('Please enter a valid Token ID');
-                return;
-            }
+			<!-- Add more fields for other metadata properties as needed -->
 
-            const endpoint = `https://imobcointest.onrender.com/v1/metadata/${idInput}`;
-            const loadingMessage = document.getElementById('loadingMessage');
-            loadingMessage.style.display = 'block';
+			<button onclick="updateImobData()">UPDATE METADATA</button>
+		</div>
+		<div id="loadingMessage" style="display: none">Loading...</div>
+		<div id="response-div"></div>
+		<script>
+			let currentImobData = null;
+			const loadingMessage = document.getElementById('loadingMessage');
+			function getImobData() {
+				const idInput = document.getElementById('idInput').value;
+				document.getElementById('response-div').innerHTML = '';
+				if (!idInput) {
+					alert('Please enter a valid Token ID');
+					return;
+				}
 
-            fetch(endpoint)
-                .then((response) => response.json())
-                .then((data) => {
-                    loadingMessage.style.display = 'none';
-                    if (data.success) {
-                        currentImobData = data.metadata;
-                        displayImobData(currentImobData);
-                    } else {
-                        alert('Data not found');
-                        document.getElementById('updateContainer').style.display = 'none';
-                    }
-                })
-                .catch((error) => {
-                    loadingMessage.style.display = 'none';
-                    alert('An error occurred while fetching data');
-                    console.error(error);
-                });
-        }
+				const endpoint = `https://imobcointest.onrender.com/v1/metadata/${idInput}`;
 
-        function displayImobData(metadata) {
-            document.getElementById('updateContainer').style.display = 'block';
-            document.getElementById('name').value = metadata.name;
-            document.getElementById('image').value = metadata.image;
-            document.getElementById('vgv').value = metadata.vgv;
+				loadingMessage.style.display = 'block';
 
-            // Add code to display other metadata properties if needed
-        }
+				fetch(endpoint)
+					.then((response) => response.json())
+					.then((data) => {
+						loadingMessage.style.display = 'none';
+						if (data.success) {
+							currentImobData = data.metadata;
+							displayImobData(currentImobData);
+						} else {
+							alert('Data not found');
+							document.getElementById('updateContainer').style.display = 'none';
+						}
+					})
+					.catch((error) => {
+						loadingMessage.style.display = 'none';
+						alert('An error occurred while fetching data');
+						console.error(error);
+					});
+			}
 
-        function updateImobData() {
-            if (!currentImobData) {
-                alert('Please fetch Imob data first');
-                return;
-            }
+			function displayImobData(metadata) {
+				document.getElementById('updateContainer').style.display = 'block';
+				document.getElementById('name').value = metadata.name;
+				document.getElementById('image').value = metadata.image;
+				document.getElementById('ata').value = metadata.ata;
 
-            // Get updated metadata values
-            const updatedName = document.getElementById('name').value;
-            const updatedImage = document.getElementById('image').value;
-            const updatedVgv = document.getElementById('vgv').value;
+				// Add code to display other metadata properties if needed
+			}
 
-            // Create the updated metadata object
-            const updatedMetadata = {
-                ...currentImobData,
-                name: updatedName,
-                image: updatedImage,
-                vgv: updatedVgv,
-                // Add other metadata properties here if needed
-            };
+			function updateImobData() {
+				if (!currentImobData) {
+					alert('Please fetch Imob data first');
+					return;
+				}
+				document.getElementById('response-div').innerHTML = '';
+				// Get updated metadata values
+				const updatedName = document.getElementById('name').value;
+				const updatedImage = document.getElementById('image').value;
+				const updatedAta = document.getElementById('ata').value;
 
-            // Make the PUT API call to update the metadata
-            const idInput = document.getElementById('idInput').value;
-            const endpoint = `https://imobcointest.onrender.com/v1/metadata/${idInput}`;
-            fetch(endpoint, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedMetadata),
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    alert('Metadata updated successfully');
-                    currentImobData = updatedMetadata;
-                } else {
-                    alert('Error updating metadata');
-                }
-            })
-            .catch((error) => {
-                alert('An error occurred while updating metadata');
-                console.error(error);
-            });
-        }
-    </script>
-</body>
+				// Create the updated metadata object
+				const updatedMetadata = {
+					...currentImobData,
+					name: updatedName,
+					image: updatedImage,
+					ata: updatedAta,
+					qualquer: 'Dado',
+					// Add other metadata properties here if needed
+				};
+
+				// Make the PUT API call to update the metadata
+				const idInput = document.getElementById('idInput').value;
+				const endpoint = `https://imobcointest.onrender.com/v1/metadata/${idInput}`;
+				loadingMessage.style.display = 'block';
+				fetch(endpoint, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ newMetadata: updatedMetadata }),
+				})
+					.then((response) => {
+						console.log(response.status);
+						return response.json();
+					})
+					.then((data) => {
+						if (data.success) {
+							loadingMessage.style.display = 'none';
+							document.getElementById('response-div').innerHTML = renderSuccess(
+								data.transactionHash
+							);
+							currentImobData = updatedMetadata;
+						} else {
+							loadingMessage.style.display = 'none';
+
+							document.getElementById('response-div').innerHTML = renderFail(
+								data.transactionHash
+							);
+						}
+					})
+					.catch((error) => {
+						alert('An error occurred while updating metadata');
+						console.error(error);
+					});
+			}
+			function renderSuccess(transactionHash) {
+				return `
+            <div class="success-response">
+                <h2 class="success-heading">Metadata Updated!</h2>
+                <p>
+                    The Imob metadata has been successfully updated.
+                    <br />
+                     <a href="https://testnet.ftmscan.com/tx/${transactionHash}" target="_blank" rel="noopener">Follow your Transaction HERE!</a>
+                </p>
+            </div>
+        `;
+			}
+
+			function renderFail() {
+				return `
+            <div class="error-response">
+                <h2 class="error-heading">Error!</h2>
+                <p>Could not update The Imob. Please try again later.</p>
+            </div>
+        `;
+			}
+		</script>
+	</body>
 </html>
