@@ -173,22 +173,24 @@
 				//const updatedImage = document.getElementById('image').value;
 				//const updatedAta = document.getElementById('ata').value;
 				//const nomeDaEmpresa = document.getElementById('nomeDaEmpresa').value;
-				console.log(currentImobData)
+				//console.log(currentImobData)
+				for (let i = 0; i < Object.keys(currentImobData).length; i++) {
+					const tempObject = {}
+					tempObject[Object.keys(currentImobData)[i]] = document.getElementById(Object.keys(currentImobData)[i]).value
+					//console.log(Object.keys(currentImobData)[i])
+					//console.log(tempObject)
+					currentImobData = {...currentImobData,...tempObject}
+				}
+				
+				//console.log(currentImobData)
 				// Create the updated metadata object
-/* 				const updatedMetadata = {
-					...currentImobData,
-					name: updatedName,
-					image: updatedImage,
-					ata: updatedAta,
-
-					// Add other metadata properties here if needed
-				}; */
+				const updatedMetadata = {...currentImobData}
 
 				// Make the PUT API call to update the metadata
 				const idInput = document.getElementById('idInput').value;
 				const endpoint = `https://imobcointest.onrender.com/v1/metadata/${idInput}`;
 				loadingMessage.style.display = 'block';
-				/* 			fetch(endpoint, {
+				 			fetch(endpoint, {
 					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json',
@@ -217,7 +219,7 @@
 					.catch((error) => {
 						alert('An error occurred while updating metadata');
 						console.error(error);
-					}); */
+					}); 
 			}
 			function generateFormFromObject(obj) {
 				const updateContainer = document.getElementById('updateContainer');
