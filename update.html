@@ -125,18 +125,6 @@
 
 		<div id="updateContainer" style="display: none">
 			<h2>Update Metadata for Imob NFT</h2>
-			<label for="name">Name:</label>
-			<input type="text" id="name" name="name" />
-
-			<label for="image">Image URL:</label>
-			<input type="text" id="image" name="image" />
-
-			<label for="vgv">ata:</label>
-			<input type="text" id="ata" name="ata" />
-
-			<!-- Add more fields for other metadata properties as needed -->
-
-			<button onclick="updateImobData()">UPDATE METADATA</button>
 		</div>
 		<div id="loadingMessage" style="display: none">Loading...</div>
 		<div id="response-div"></div>
@@ -145,7 +133,7 @@
 			const loadingMessage = document.getElementById('loadingMessage');
 			function getImobData() {
 				const idInput = document.getElementById('idInput').value;
-				document.getElementById('response-div').innerHTML = '';
+				document.getElementById('updateContainer').innerHTML = '';
 				if (!idInput) {
 					alert('Please enter a valid Token ID');
 					return;
@@ -161,7 +149,7 @@
 						loadingMessage.style.display = 'none';
 						if (data.success) {
 							currentImobData = data.metadata;
-							displayImobData(currentImobData);
+							generateFormFromObject(currentImobData);
 						} else {
 							alert('Data not found');
 							document.getElementById('updateContainer').style.display = 'none';
@@ -174,15 +162,6 @@
 					});
 			}
 
-			function displayImobData(metadata) {
-				document.getElementById('updateContainer').style.display = 'block';
-				document.getElementById('name').value = metadata.name;
-				document.getElementById('image').value = metadata.image;
-				document.getElementById('ata').value = metadata.ata;
-
-				// Add code to display other metadata properties if needed
-			}
-
 			function updateImobData() {
 				if (!currentImobData) {
 					alert('Please fetch Imob data first');
@@ -190,25 +169,26 @@
 				}
 				document.getElementById('response-div').innerHTML = '';
 				// Get updated metadata values
-				const updatedName = document.getElementById('name').value;
-				const updatedImage = document.getElementById('image').value;
-				const updatedAta = document.getElementById('ata').value;
-
+				//const updatedName = document.getElementById('name').value;
+				//const updatedImage = document.getElementById('image').value;
+				//const updatedAta = document.getElementById('ata').value;
+				//const nomeDaEmpresa = document.getElementById('nomeDaEmpresa').value;
+				console.log(currentImobData)
 				// Create the updated metadata object
-				const updatedMetadata = {
+/* 				const updatedMetadata = {
 					...currentImobData,
 					name: updatedName,
 					image: updatedImage,
 					ata: updatedAta,
-					qualquer: 'Dado',
+
 					// Add other metadata properties here if needed
-				};
+				}; */
 
 				// Make the PUT API call to update the metadata
 				const idInput = document.getElementById('idInput').value;
 				const endpoint = `https://imobcointest.onrender.com/v1/metadata/${idInput}`;
 				loadingMessage.style.display = 'block';
-				fetch(endpoint, {
+				/* 			fetch(endpoint, {
 					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json',
@@ -237,8 +217,48 @@
 					.catch((error) => {
 						alert('An error occurred while updating metadata');
 						console.error(error);
-					});
+					}); */
 			}
+			function generateFormFromObject(obj) {
+				const updateContainer = document.getElementById('updateContainer');
+				updateContainer.style.display = 'block';
+				// Create a form element
+				//const form = document.createElement('form');
+
+				// Loop through the object keys and create input elements with labels
+				for (const key in obj) {
+					if (obj.hasOwnProperty(key)) {
+						// Create a label element
+						const label = document.createElement('label');
+						label.textContent = toHumanReadable(key); // Convert key to human-readable format
+
+						// Create an input element
+						const input = document.createElement('input');
+						input.type = 'text';
+						input.name = key;
+						input.id = key;
+						input.value = obj[key];
+
+						// Add the label and input elements to the form
+						updateContainer.appendChild(label);
+						updateContainer.appendChild(input);
+					}
+				}
+				const updateButton = document.createElement('button');
+				updateButton.textContent = 'UPDATE IMOB METADATA';
+				updateButton.onclick = updateImobData;
+				updateContainer.appendChild(updateButton);
+				// Add the form to the container
+				//updateContainer.appendChild(form);
+			}
+
+			// Helper function to convert key to human-readable format (e.g., "first_name" to "First Name")
+			function toHumanReadable(key) {
+				return key
+					.replace(/_/g, ' ') // Replace underscores with spaces
+					.replace(/(?:^|\s)\S/g, (char) => char.toUpperCase()); // Capitalize the first character of each word
+			}
+
 			function renderSuccess(transactionHash) {
 				return `
             <div class="success-response">
