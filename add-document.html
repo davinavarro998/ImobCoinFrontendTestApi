@@ -138,7 +138,7 @@
 				newMetadata[processString(documentName)] = documentUrl;
 				//console.log(processString(algo));
 				//console.log(newMetadata)
-				const endpoint = `https:imobcointest.onrender.com/v1/metadata/${tokenId}`;
+				const endpoint = `https://imobcointest.onrender.com/v1/metadata/${tokenId}`;
                 document.getElementById("loading-p").style.display = "block"
 				try {
 					const response = await fetch(endpoint, {
