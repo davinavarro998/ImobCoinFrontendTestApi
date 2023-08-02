@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Add a document</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 20px;
+				background-color: #f9f9f9;
+			}
+
+			h1 {
+				text-align: center;
+				margin-bottom: 20px;
+				color: #4c6ef5;
+			}
+
+			form {
+				max-width: 600px;
+				margin: 0 auto;
+				padding: 20px;
+				background-color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 5px;
+				color: #333;
+			}
+
+			input[type='text'],
+			input[type='number'],
+			input[type='password'],
+			input[type='url'] {
+				width: 95%;
+				padding: 10px;
+				margin-bottom: 15px;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+			}
+
+			input[type='submit'] {
+				width: 99%;
+				padding: 10px;
+				background-color: #4c6ef5;
+				color: #fff;
+				font-size: 16px;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+			}
+			input[type='submit']:hover {
+				background-color: #718bf5;
+			}
+            .success-response {
+				background-color: #d4edda;
+				border: 1px solid #c3e6cb;
+				padding: 10px;
+				margin-top: 10px;
+			}
+
+			.success-heading {
+				color: #155724;
+			}
+
+			/* Styles for error response */
+			.error-response {
+				background-color: #f8d7da;
+				border: 1px solid #f5c6cb;
+				padding: 10px;
+				margin-top: 10px;
+			}
+
+			.error-heading {
+				color: #721c24;
+			}
+			#result {
+				margin-top: 20px;
+				padding: 20px;
+				background-color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				display: none;
+			}
+
+			#result h2 {
+				color: #4c6ef5;
+				margin-bottom: 10px;
+			}
+
+			#result p {
+				margin: 5px 0;
+			}
+		</style>
+	</head>
+	<body>
+		<nav>
+			<ul>
+				<li>
+					<a href="./view.html">View minted Imobs</a>
+				</li>
+				<li>
+					<a href="./update.html">Update a Imob</a>
+				</li>
+				<li>
+					<a href="./index.html">Mint a Imob</a>
+				</li>
+			</ul>
+		</nav>
+		<form id="add-document-form">
+			<label for="document-key">Token ID:</label>
+			<input type="number" id="token-id" name="token-id" required min="1" />
+			<label for="document-key">Document Name:</label>
+			<input type="text" id="document-key" name="document-key" required />
+			<br />
+			<label for="document-url">Document URL:</label>
+			<input type="url" id="document-url" name="document-url" required />
+			<br />
+			<input type="submit" value="ADD DOCUMENT HERE" />
+            <p style="display: none;" id="loading-p">Loading...</p>
+		</form>
+        <div  id="response-result">
+
+        </div>
+		<script>
+			const addDocumentForm = document.getElementById('add-document-form');
+
+			addDocumentForm.addEventListener('submit', async (event) => {
+				event.preventDefault();
+				const tokenId = document.getElementById('token-id').value;
+				const documentName = document.getElementById('document-key').value;
+				const documentUrl = document.getElementById('document-url').value;
+				const newMetadata = {};
+				newMetadata[processString(documentName)] = documentUrl;
+				//console.log(processString(algo));
+				//console.log(newMetadata)
+				const endpoint = `https:imobcointest.onrender.com/v1/metadata/${tokenId}`;
+                document.getElementById("loading-p").style.display = "block"
+				try {
+					const response = await fetch(endpoint, {
+						method: 'PUT',
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        body: JSON.stringify({newMetadata:newMetadata})
+					});
+                    const jsonResponse = await response.json()
+                    document.getElementById("loading-p").style.display = "none"
+
+                    document.getElementById("response-result").innerHTML = renderSuccess(jsonResponse.transactionHash)
+				} catch (error) {
+                    document.getElementById("loading-p").style.display = "none"
+                    document.getElementById("response-result").innerHTML = renderFail()
+                    alert("Could not add a document")
+                    console.error(error)
+                }
+			});
+			function processString(inputString) {
+				// Convert the input string to lowercase
+				let lowercasedString = inputString.toLowerCase();
+
+				// Remove spaces in between characters using regex
+				let stringWithoutSpaces = lowercasedString.replace(/\s+/g, '');
+
+				// Trim spaces at the beginning and end of the string
+				let trimmedString = stringWithoutSpaces.trim();
+
+				return trimmedString;
+			}
+            function renderSuccess(transactionHash) {
+				return `
+            <div class="success-response">
+                <h2 class="success-heading">Document Added!</h2>
+                <p>
+                    The Imob metadata has been successfully updated.
+                    <br />
+                     <a href="https://testnet.ftmscan.com/tx/${transactionHash}" target="_blank" rel="noopener">Follow your Transaction HERE!</a>
+                </p>
+            </div>
+        `;
+			}
+            function renderFail() {
+				return `
+            <div class="error-response">
+                <h2 class="error-heading">Error!</h2>
+                <p>Could not update The Imob. Please try again later.</p>
+            </div>
+        `;
+			}
+		</script>
+	</body>
+</html>
