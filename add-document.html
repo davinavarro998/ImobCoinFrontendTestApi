@@ -138,10 +138,10 @@
 				newMetadata[processString(documentName)] = documentUrl;
 				//console.log(processString(algo));
 				//console.log(newMetadata)
-				const endpoint = `https://imobcointest.onrender.com/v1/metadata/${tokenId}`;
+				 `https://imobcointest.onrender.com/v1/metadata/${tokenId}`
                 document.getElementById("loading-p").style.display = "block"
 				try {
-					const response = await fetch(endpoint, {
+					const response = await fetch(`https://imobcointest.onrender.com/v1/metadata/${tokenId}`, {
 						method: 'PUT',
                         headers:{
                             "Content-Type":"application/json"
